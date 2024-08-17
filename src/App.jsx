@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { AuthProvider } from "./context/authContext";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <div>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <AuthProvider>
+          <main>
+            <Outlet />
+          </main>
+        </AuthProvider>
       </div>
     </>
   );
