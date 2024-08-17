@@ -33,7 +33,6 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_id");
-    localStorage.removeItem("id_cart");
     navigate("/login");
     setIsAuthenticated(false);
     setUser(null);

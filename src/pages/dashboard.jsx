@@ -1,5 +1,6 @@
 import React from "react";
 import FirebaseImageUpload from "../Firebase/FirebaseImageUpload";
+import DashboardLayout from "../components/organism/DashboardLayout";
 
 function DashboardPage() {
   return (
