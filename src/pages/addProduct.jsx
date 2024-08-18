@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import DashboardLayout from "../components/organism/DashboardLayout";
+import React, { useState, useEffect } from "react";
 import FirebaseImageUpload from "../Firebase/FirebaseImageUpload";
 import ImageProduct from "../Firebase/ImageProduct";
 import axios from "axios";
+import Button from "../components/atoms/Button";
+import { useNavigate } from "react-router-dom";
 
 function AddProductPage() {
   const [productName, setProductName] = useState("");
-  const [displayImage, setDisplayImage] = useState(null);
   const [stock, setStock] = useState(0);
   const [category, setCategory] = useState("");
   const [color, setColor] = useState("");
@@ -14,12 +14,25 @@ function AddProductPage() {
   const [discount, setDiscount] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
+  const [displayImage, setDisplayImage] = useState("");
+  const navigate = useNavigate();
 
-  const imageDisplay = localStorage.getItem("displayUrl");
-  const image1 = localStorage.getItem("imageUrl_0");
-  const image2 = localStorage.getItem("imageUrl_1");
-  const image3 = localStorage.getItem("imageUrl_2");
-  const image4 = localStorage.getItem("imageUrl_3");
+  // Mendapatkan gambar dari local storage saat komponen pertama kali dimuat
+  useEffect(() => {
+    const imageDisplay = localStorage.getItem("displayUrl");
+    if (imageDisplay) {
+      setDisplayImage(imageDisplay);
+    }
+
+    const storedImages = [];
+    for (let i = 0; i <= 5; i++) {
+      const imageUrl = localStorage.getItem(`imageUrl_${i}`);
+      if (imageUrl) {
+        storedImages.push(imageUrl);
+      }
+    }
+    setImages(storedImages);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,10 +43,10 @@ function AddProductPage() {
       description,
       category,
       color,
-      image: imageDisplay, // Asumsikan displayImage adalah URL gambar utama
+      image: displayImage,
       price,
       stock,
-      images: [image1, image2, image3, image4], // Asumsikan `images` adalah array URL gambar tambahan
+      images,
       discount,
     };
 
@@ -51,6 +64,17 @@ function AddProductPage() {
           },
         }
       );
+
+      localStorage.removeItem(
+        "displayUrl",
+        "imageUrl_0",
+        "imageUrl_1",
+        "imageUrl_2",
+        "imageUrl_3",
+        "imageUrl_4",
+        "imageUrl_5"
+      );
+      navigate("/");
       console.log("Produk berhasil ditambahkan", response.data);
       // Kosongkan formulir atau arahkan pengguna sesuai kebutuhan
     } catch (error) {
@@ -79,9 +103,9 @@ function AddProductPage() {
           <FirebaseImageUpload onImageUpload={(url) => setDisplayImage(url)} />
           {displayImage && (
             <img
-              src={imageDisplay}
+              src={displayImage}
               alt="Display"
-              className="mt-2 w-32 h-32 object-cover"
+              className="mt-2 max-w-full object-cover"
             />
           )}
         </div>
@@ -99,7 +123,7 @@ function AddProductPage() {
                   key={index}
                   src={url}
                   alt={`Produk ${index}`}
-                  className="w-32 h-32 object-cover inline-block mr-2"
+                  className="max-w-[300px] object-cover inline-block m-2 "
                 />
               ))}
             </div>
@@ -111,7 +135,7 @@ function AddProductPage() {
             <button
               type="button"
               onClick={() => setStock(stock > 0 ? stock - 1 : 0)}
-              className="px-2 py-1 bg-red-500 text-white rounded-md"
+              className="px-2 py-1 bg-[#16697A] text-white rounded-md"
             >
               -
             </button>
@@ -124,7 +148,7 @@ function AddProductPage() {
             <button
               type="button"
               onClick={() => setStock(stock + 1)}
-              className="px-2 py-1 bg-green-500 text-white rounded-md"
+              className="px-2 py-1 bg-[#16697A] text-white rounded-md"
             >
               +
             </button>
@@ -175,12 +199,12 @@ function AddProductPage() {
             rows="4"
           ></textarea>
         </div>
-        <button
+        <Button
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded-md"
         >
           Simpan Produk
-        </button>
+        </Button>
       </form>
     </div>
   );
