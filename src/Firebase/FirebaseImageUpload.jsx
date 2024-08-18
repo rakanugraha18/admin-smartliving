@@ -8,6 +8,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { v4 } from "uuid";
+import Button from "../components/atoms/Button";
 
 function FirebaseImageUpload() {
   const [img, setImg] = useState(null);
@@ -48,6 +49,7 @@ function FirebaseImageUpload() {
         const latestImage = urlArray[urlArray.length - 1];
         setImgUrl(latestImage.url);
         setImgRef(latestImage.ref);
+        localStorage.setItem("displayUrl", latestImage.url);
       }
     }
   };
@@ -86,7 +88,9 @@ function FirebaseImageUpload() {
         onChange={(e) => setImg(e.target.files[0])}
         accept="image/*"
       />
-      <button onClick={handleClick}>Upload</button>
+      <Button size="small" onClick={handleClick}>
+        Upload
+      </Button>
       <div>
         {imgUrl && (
           <div
@@ -96,12 +100,7 @@ function FirebaseImageUpload() {
               margin: "10px",
             }}
           >
-            <img
-              src={imgUrl}
-              alt="Uploaded"
-              style={{ width: "auto", height: "auto" }}
-            />
-            <button
+            {/* <button
               onClick={handleDelete}
               style={{
                 position: "absolute",
@@ -112,7 +111,7 @@ function FirebaseImageUpload() {
               }}
             >
               Delete
-            </button>
+            </button> */}
           </div>
         )}
       </div>

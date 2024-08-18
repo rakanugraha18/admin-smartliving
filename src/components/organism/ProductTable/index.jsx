@@ -9,6 +9,7 @@ const ProductTable = () => {
   const [products, setProducts] = useState([]);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchProducts();
@@ -30,11 +31,15 @@ const ProductTable = () => {
 
   const handleDelete = async (productId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/product/${productId}`);
-      setProducts(products.filter((product) => product.id !== productId));
+      await axios.delete(`http://localhost:3000/api/product/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Kirim token untuk otentikasi
+        },
+      });
       console.log("Product deleted");
     } catch (error) {
       console.error("Error deleting product:", error);
+      alert("Failed to delete the product. Please try again.");
     }
   };
 
@@ -130,7 +135,7 @@ const ProductTable = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-4 py-2 border border-gray-300 rounded-md enabled:hover:text-[#16697A] enabled:hover:border-[#16697A]"
+              className="px-4 py-2 border border-gray-300 rounded-md enabled:hover:text-[#16697A] enabled:hover:border-[#16697A] "
             >
               Previous
             </button>

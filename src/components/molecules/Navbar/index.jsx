@@ -1,13 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
 import { FiLogOut } from "react-icons/fi";
 import logoSmartLiving from "../../../assets/LogoSmartLiving.svg";
+import axios from "axios";
 
 function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState(""); // State untuk nama pengguna
+  const { isLoggedIn, logout, token } = useAuth(); // Dapatkan status login, fungsi logout, dan token
 
-  const { isLoggedIn, logout } = useAuth(); // Dapatkan status login dan fungsi logout
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (isLoggedIn) {
+        try {
+          const response = await axios.get(
+            "http://localhost:3000/api/admin/admin-profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Kirim token untuk otentikasi
+              },
+            }
+          );
+          setUserName(response.data); // Atur nama pengguna dari respons API
+          console.log("User profile fetched:", response.data);
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [isLoggedIn, token]); // Re-fetch jika status login atau token berubah
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -24,7 +48,7 @@ function Navbar() {
       </div>
       <div className="relative">
         <button onClick={handleDropdownToggle} className="flex items-center">
-          <span className="mr-2">Admin Name</span>
+          <span className="mr-2">Smart Living</span>
           <svg
             className="w-6 h-6"
             xmlns="http://www.w3.org/2000/svg"

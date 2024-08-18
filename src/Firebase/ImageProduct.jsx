@@ -8,6 +8,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { v4 } from "uuid";
+import Button from "../components/atoms/Button";
 
 function ImageProduct() {
   const [imgs, setImgs] = useState([]);
@@ -80,8 +81,10 @@ function ImageProduct() {
         onChange={(e) => setNewImg(e.target.files[0])}
         accept="image/*"
       />
-      <button onClick={uploadImage}>Upload</button>
-      <div>
+      <Button size="small" onClick={uploadImage}>
+        Upload
+      </Button>
+      {/* <div>
         {imgs.map((url, index) => (
           <div
             key={index}
@@ -110,7 +113,7 @@ function ImageProduct() {
             </button>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
