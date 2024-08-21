@@ -43,6 +43,7 @@ function EditProductPage() {
 
         localStorage.setItem("displayUrl", product.image);
 
+        console.log(product.image);
         // Store each image URL in local storage with a unique key
         product.images.forEach((img, index) => {
           localStorage.setItem(`imageUrl_${index + 1}`, img.image_url);

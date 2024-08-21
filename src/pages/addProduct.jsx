@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../components/atoms/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UploadImageDisplay from "../components/molecules/ImageUploader/UploadImageDisplay";
 import UploadProductImage from "../components/molecules/ImageUploader/UploadProductImage";
+
+// Function to retrieve all image URLs from local storage
+const getLocalStorageImageUrls = () => {
+  const allKeys = Object.keys(localStorage);
+  const imageKeys = allKeys.filter((key) => key.startsWith("imageUrl_"));
+  return imageKeys.map((key) => localStorage.getItem(key));
+};
 
 function AddProductPage() {
   const [productName, setProductName] = useState("");
@@ -16,34 +23,40 @@ function AddProductPage() {
   const [images, setImages] = useState([]);
   const [displayImage, setDisplayImage] = useState("");
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  // Ambil semua kunci dari localStorage
-  const allKeys = Object.keys(localStorage);
-  // Filter kunci yang dimulai dengan "imageUrl_"
-  const imageKeys = allKeys.filter((key) => key.startsWith("imageUrl_"));
-  // Ambil semua URL berdasarkan kunci yang sesuai
-  const imageUrls = imageKeys.map((key) => localStorage.getItem(key));
-  // Output hasilnya
-
-  // Mendapatkan gambar dari local storage saat komponen pertama kali dimuat
   useEffect(() => {
-    const imageDisplay = localStorage.getItem("displayUrl");
-    if (imageDisplay) {
-      setDisplayImage(imageDisplay);
-    }
+    // Fetch product data by ID
+    axios
+      .get(`${import.meta.env.VITE_API_BASEURL}/api/product/${id}`)
+      .then((response) => {
+        const product = response.data;
+        setProductName(product.name);
+        setStock(product.stock);
+        setCategory(product.category);
+        setColor(product.color);
+        setPrice(product.price);
+        setDiscount(product.discount);
+        setDescription(product.description);
+        setDisplayImage(product.image);
+        setImages(product.images.map((img) => img.image_url));
 
-    const storedImages = [];
-    for (let i = 0; i <= 5; i++) {
-      const imageUrl = localStorage.getItem(`imageUrl_${i}`);
-      if (imageUrl) {
-        storedImages.push(imageUrl);
-      }
-    }
-    setImages(storedImages);
-  }, []);
+        localStorage.setItem("displayUrl", product.image);
+
+        console.log(product.image);
+        // Store each image URL in local storage with a unique key
+        product.images.forEach((img, index) => {
+          localStorage.setItem(`imageUrl_${index + 1}`, img.image_url);
+        });
+      })
+      .catch((error) => console.error("Error fetching product data", error));
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Get image URLs from local storage
+    const imageUrls = getLocalStorageImageUrls();
 
     // Format data produk
     const productData = {
@@ -105,7 +118,7 @@ function AddProductPage() {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Gambar Display</label>
-          <UploadImageDisplay />
+          <UploadImageDisplay onImageUpload={setDisplayImage} />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Gambar Produk</label>

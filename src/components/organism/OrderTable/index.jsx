@@ -19,8 +19,6 @@ const OrderTable = () => {
           }
         );
         setOrders(response.data.orders);
-
-        console.log(response.data.orders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }

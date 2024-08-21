@@ -43,56 +43,64 @@ function Navbar() {
   };
 
   return (
-    <header className="bg-white text-[#16697A] h-28 flex items-center justify-between px-6 shadow-lg border border-b border-spacing-1">
-      <div className="text-2xl font-bold">
+    <header className="bg-white relative text-[#16697A] flex justify-center h-28 px-6 shadow-lg border border-b border-spacing-1 items-center">
+      <Link to={"/"}>
         <img src={logoSmartLiving} className="h-20" alt="" />
-      </div>
-      <div className="relative">
-        <button onClick={handleDropdownToggle} className="flex items-center">
-          <span className="mr-2">
-            {userName.first_name} {userName.last_name}
-          </span>
-          <svg
-            className="w-6 h-6"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-        {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white text-gray-900 shadow-lg rounded-lg">
-            <ul>
-              <li>
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 hover:bg-gray-200"
-                >
-                  Profile
-                </Link>
-              </li>
-              <li>
-                {isAuthenticated && (
-                  <div className="text-center md:block group">
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-200"
+      </Link>
+
+      <div className="bg-white absolute text-[#16697A] h-full flex items-center justify-end right-0 top-0 mx-11">
+        <div>
+          <div className="relative">
+            <button
+              onClick={handleDropdownToggle}
+              className="flex items-center"
+            >
+              <span className="mr-2">
+                {userName.first_name} {userName.last_name}
+              </span>
+              <svg
+                className="w-6 h-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white text-gray-900 shadow-lg rounded-lg">
+                <ul>
+                  <li>
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 hover:bg-gray-200"
                     >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </li>
-            </ul>
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    {isAuthenticated && (
+                      <div className="text-center md:block group">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 hover:bg-gray-200"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </header>
   );
