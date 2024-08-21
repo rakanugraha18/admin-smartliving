@@ -10,7 +10,7 @@ const registerUser = async (
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/admin/register`,
+      `${API_URL}/api/admin/register`,
       {
         first_name: firstName,
         last_name: lastName,
