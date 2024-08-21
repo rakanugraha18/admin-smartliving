@@ -1,11 +1,10 @@
 import React from "react";
-import FirebaseImageUpload from "../Firebase/FirebaseImageUpload";
-import DashboardLayout from "../components/organism/DashboardLayout";
+import UploadImageDisplay from "../components/molecules/ImageUploader/UploadImageDisplay";
 
 function DashboardPage() {
   return (
     <div>
-      <FirebaseImageUpload />
+      <UploadImageDisplay />
     </div>
   );
 }

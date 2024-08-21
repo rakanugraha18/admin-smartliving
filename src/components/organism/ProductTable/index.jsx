@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import formatRupiah from "../../../utils/formatRupiah";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchBox from "../../atoms/SearchBox";
 
 const ProductTable = () => {
@@ -10,6 +10,7 @@ const ProductTable = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -19,7 +20,6 @@ const ProductTable = () => {
     try {
       const response = await axios.get("http://localhost:3000/api/product");
       setProducts(response.data.data);
-      console.log("Products fetched:", response.data.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -27,6 +27,13 @@ const ProductTable = () => {
 
   const handleEdit = (productId) => {
     console.log("Edit product", productId);
+    navigate(`/edit-product/${productId}`);
+    // Remove images from local storage only after a successful update
+    const imageKeys = Object.keys(localStorage).filter((key) =>
+      key.startsWith("imageUrl_")
+    );
+    imageKeys.forEach((key) => localStorage.removeItem(key));
+    localStorage.removeItem("displayUrl");
   };
 
   const handleDelete = async (productId) => {
