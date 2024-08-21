@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import FirebaseImageUpload from "../Firebase/FirebaseImageUpload";
-import ImageProduct from "../Firebase/ImageProduct";
 import axios from "axios";
 import Button from "../components/atoms/Button";
 import { useNavigate } from "react-router-dom";
+import UploadImageDisplay from "../components/molecules/ImageUploader/UploadImageDisplay";
+import UploadProductImage from "../components/molecules/ImageUploader/UploadProductImage";
 
 function AddProductPage() {
   const [productName, setProductName] = useState("");
@@ -16,6 +16,14 @@ function AddProductPage() {
   const [images, setImages] = useState([]);
   const [displayImage, setDisplayImage] = useState("");
   const navigate = useNavigate();
+
+  // Ambil semua kunci dari localStorage
+  const allKeys = Object.keys(localStorage);
+  // Filter kunci yang dimulai dengan "imageUrl_"
+  const imageKeys = allKeys.filter((key) => key.startsWith("imageUrl_"));
+  // Ambil semua URL berdasarkan kunci yang sesuai
+  const imageUrls = imageKeys.map((key) => localStorage.getItem(key));
+  // Output hasilnya
 
   // Mendapatkan gambar dari local storage saat komponen pertama kali dimuat
   useEffect(() => {
@@ -46,7 +54,7 @@ function AddProductPage() {
       image: displayImage,
       price,
       stock,
-      images,
+      images: imageUrls,
       discount,
     };
 
@@ -65,17 +73,14 @@ function AddProductPage() {
         }
       );
 
-      localStorage.removeItem(
-        "displayUrl",
-        "imageUrl_0",
-        "imageUrl_1",
-        "imageUrl_2",
-        "imageUrl_3",
-        "imageUrl_4",
-        "imageUrl_5"
+      // Remove images from local storage
+      const imageKeys = Object.keys(localStorage).filter((key) =>
+        key.startsWith("imageUrl_")
       );
+      imageKeys.forEach((key) => localStorage.removeItem(key));
+      localStorage.removeItem(`displayUrl`);
+
       navigate("/");
-      console.log("Produk berhasil ditambahkan", response.data);
       // Kosongkan formulir atau arahkan pengguna sesuai kebutuhan
     } catch (error) {
       console.error(
@@ -99,35 +104,12 @@ function AddProductPage() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Gambar Utama</label>
-          <FirebaseImageUpload onImageUpload={(url) => setDisplayImage(url)} />
-          {displayImage && (
-            <img
-              src={displayImage}
-              alt="Display"
-              className="mt-2 max-w-full object-cover"
-            />
-          )}
+          <label className="block text-gray-700">Gambar Display</label>
+          <UploadImageDisplay />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Gambar Produk</label>
-          <ImageProduct
-            onImageUpload={(url) =>
-              setImages((prevImages) => [...prevImages, url])
-            }
-          />
-          {images.length > 0 && (
-            <div className="mt-2">
-              {images.map((url, index) => (
-                <img
-                  key={index}
-                  src={url}
-                  alt={`Produk ${index}`}
-                  className="max-w-[300px] object-cover inline-block m-2 "
-                />
-              ))}
-            </div>
-          )}
+          <UploadProductImage />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Stok</label>
@@ -182,7 +164,7 @@ function AddProductPage() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Diskon</label>
+          <label className="block text-gray-700">Diskon {"(%)"}</label>
           <input
             type="number"
             value={discount}
@@ -199,12 +181,12 @@ function AddProductPage() {
             rows="4"
           ></textarea>
         </div>
-        <Button
+        <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          className="px-4 py-2 bg-[#16697A] text-white rounded-[15px]"
         >
           Simpan Produk
-        </Button>
+        </button>
       </form>
     </div>
   );

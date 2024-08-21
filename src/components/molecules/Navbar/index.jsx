@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
 import { FiLogOut } from "react-icons/fi";
 import logoSmartLiving from "../../../assets/LogoSmartLiving.svg";
@@ -8,11 +8,12 @@ import axios from "axios";
 function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState(""); // State untuk nama pengguna
-  const { isLoggedIn, logout, token } = useAuth(); // Dapatkan status login, fungsi logout, dan token
+  const { isAuthenticated, logout, token } = useAuth(); // Dapatkan status login, fungsi logout, dan token
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      if (isLoggedIn) {
+      if ((isAuthenticated, token)) {
         try {
           const response = await axios.get(
             "http://localhost:3000/api/admin/admin-profile",
@@ -23,7 +24,6 @@ function Navbar() {
             }
           );
           setUserName(response.data); // Atur nama pengguna dari respons API
-          console.log("User profile fetched:", response.data);
         } catch (error) {
           console.error("Error fetching user profile:", error);
         }
@@ -31,7 +31,7 @@ function Navbar() {
     };
 
     fetchUserProfile();
-  }, [isLoggedIn, token]); // Re-fetch jika status login atau token berubah
+  }, [isAuthenticated, token]); // Re-fetch jika status login atau token berubah
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -39,6 +39,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout(); // Panggil fungsi logout
+    navigate("/login");
   };
 
   return (
@@ -48,7 +49,9 @@ function Navbar() {
       </div>
       <div className="relative">
         <button onClick={handleDropdownToggle} className="flex items-center">
-          <span className="mr-2">Smart Living</span>
+          <span className="mr-2">
+            {userName.first_name} {userName.last_name}
+          </span>
           <svg
             className="w-6 h-6"
             xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +79,7 @@ function Navbar() {
                 </Link>
               </li>
               <li>
-                {isLoggedIn && (
+                {isAuthenticated && (
                   <div className="text-center md:block group">
                     <button
                       onClick={handleLogout}

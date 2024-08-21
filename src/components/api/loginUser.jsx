@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_BASEURL;
 const loginUser = async (email, password) => {
   try {
     const resLogin = await axios.post(
-      `${API_URL}/customers/login`,
+      `${API_URL}/admin/login-admin`,
       { email, password },
       {
         headers: {
@@ -18,6 +18,7 @@ const loginUser = async (email, password) => {
     const user_id = resLogin.data.userId;
     localStorage.setItem("token", token);
     localStorage.setItem("user_id", user_id);
+    localStorage.setItem("loggedIn", true);
 
     return token;
   } catch (error) {
