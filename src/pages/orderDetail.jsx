@@ -12,7 +12,9 @@ const OrderDetailPage = () => {
     const fetchOrder = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/order/${user_id}/${order_id}`,
+          `${
+            import.meta.env.VITE_API_BASEURL
+          }/api/order/${user_id}/${order_id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -32,7 +34,7 @@ const OrderDetailPage = () => {
   const handleStatusChange = async (newStatus) => {
     try {
       await axios.put(
-        `http://localhost:3000/api/order/${order_id}`,
+        `${import.meta.env.VITE_API_BASEURL}/api/order/${order_id}`,
         {
           status: newStatus,
         },

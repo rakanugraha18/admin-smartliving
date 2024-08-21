@@ -10,11 +10,14 @@ const OrderTable = () => {
     // Fetch all orders for admin
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/order", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASEURL}/api/order`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         setOrders(response.data.orders);
 
         console.log(response.data.orders);

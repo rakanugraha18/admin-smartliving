@@ -16,7 +16,7 @@ function Navbar() {
       if ((isAuthenticated, token)) {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/admin/admin-profile",
+            `${import.meta.env.VITE_API_BASEURL}/api/admin/admin-profile`,
             {
               headers: {
                 Authorization: `Bearer ${token}`, // Kirim token untuk otentikasi
