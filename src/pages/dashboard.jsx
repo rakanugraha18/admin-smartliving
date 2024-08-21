@@ -1,12 +1,10 @@
 import React from "react";
-import UploadImageDisplay from "../components/molecules/ImageUploader/UploadImageDisplay";
+import DashboardTemplate from "../components/templates/DashboardTemplate";
 
-function DashboardPage() {
-  return (
-    <div>
-      <UploadImageDisplay />
-    </div>
-  );
-}
+const DashboardPage = () => (
+  <div>
+    <DashboardTemplate />
+  </div>
+);
 
 export default DashboardPage;
