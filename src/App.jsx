@@ -36,6 +36,8 @@ import RegisterPage from "./pages/register";
 import AddProductPage from "./pages/addProduct";
 import ProductPage from "./pages/product";
 import EditProductPage from "./pages/editProduct";
+import OrderPage from "./pages/order";
+import OrderDetailPage from "./pages/orderDetail";
 
 function App() {
   return (
@@ -51,6 +53,11 @@ function App() {
                   <Route path="/" element={<DashboardPage />} />
                   <Route path="add-product" element={<AddProductPage />} />
                   <Route path="product" element={<ProductPage />} />
+                  <Route path="orders" element={<OrderPage />} />
+                  <Route
+                    path="orders/:user_id/:order_id"
+                    element={<OrderDetailPage />}
+                  />
                   <Route
                     path="edit-product/:id"
                     element={<EditProductPage />}

@@ -18,7 +18,9 @@ const ProductTable = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/product");
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASEURL}/api/product`
+      );
       setProducts(response.data.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -38,11 +40,14 @@ const ProductTable = () => {
 
   const handleDelete = async (productId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/product/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Kirim token untuk otentikasi
-        },
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASEURL}/api/product/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Kirim token untuk otentikasi
+          },
+        }
+      );
       console.log("Product deleted");
     } catch (error) {
       console.error("Error deleting product:", error);

@@ -20,6 +20,11 @@ function DashboardLayout() {
                   Product
                 </Link>
               </li>
+              <li className="mb-4">
+                <Link to="/orders" className="hover:text-[#389db1]">
+                  Orders
+                </Link>
+              </li>
               {/* Tambahkan item menu lainnya di sini */}
             </ul>
           </nav>
